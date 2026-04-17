@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
+//import { formatarDadosComparacao } from './components/utils/formatarDados'
 
 type ResultadoItem = {
   id_resultado_teste: number
@@ -8,6 +9,22 @@ type ResultadoItem = {
   observacao: string | null
   atleta: { nome: string } | null
   tipo_teste: { nome: string } | null
+}
+
+type DadoGrafico = {
+  atleta: string
+  valor: number
+  teste: string
+  data: string
+}
+
+function formatarDadosComparacao(dados: ResultadoItem[]): DadoGrafico[] {
+  return dados.map((item) => ({
+    atleta: item.atleta?.nome ?? 'Sem nome',
+    valor: item.valor ?? 0,
+    teste: item.tipo_teste?.nome ?? 'Sem teste',
+    data: item.data_resultado ?? 'Sem data',
+  })) // tirar essa função daqui e deixar em utils, formatar dados 
 }
 
 function App() {
@@ -43,6 +60,10 @@ function App() {
 
     buscarResultados()
   }, [])
+
+  const dadosFormatados = formatarDadosComparacao(dados)
+
+  console.log('Dados formatados:', dadosFormatados)
 
   if (carregando) return <p>Carregando...</p>
   if (erro) return <p>Erro: {erro}</p>
