@@ -1,31 +1,10 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
-//import { formatarDadosComparacao } from './components/utils/formatarDados'
+import { formatarDadosComparacao, formatarDadosPorData } from './components/utils/formatarDados'
+import GraficoComparacaoT12 from './components/charts/comparacaoT12'
+import type { ResultadoItem } from './components/types/graficos'
+import GraficoComparacaoPorData from './components/charts/GrafiicoComparacaoPorData'
 
-type ResultadoItem = {
-  id_resultado_teste: number
-  valor: number | null
-  data_resultado: string | null
-  observacao: string | null
-  atleta: { nome: string } | null
-  tipo_teste: { nome: string } | null
-}
-
-type DadoGrafico = {
-  atleta: string
-  valor: number
-  teste: string
-  data: string
-}
-
-function formatarDadosComparacao(dados: ResultadoItem[]): DadoGrafico[] {
-  return dados.map((item) => ({
-    atleta: item.atleta?.nome ?? 'Sem nome',
-    valor: item.valor ?? 0,
-    teste: item.tipo_teste?.nome ?? 'Sem teste',
-    data: item.data_resultado ?? 'Sem data',
-  })) // tirar essa função daqui e deixar em utils, formatar dados 
-}
 
 function App() {
   const [dados, setDados] = useState<ResultadoItem[]>([])
@@ -46,8 +25,8 @@ function App() {
         `)
         .order('data_resultado', { ascending: true })
 
-      console.log('Primeiro item:', data?.[0])
-      console.log('ERRO:', error)
+      //console.log('Primeiro item:', data?.[0])
+      //console.log('ERRO:', error)
 
       if (error) {
         setErro(error.message)
@@ -61,7 +40,12 @@ function App() {
     buscarResultados()
   }, [])
 
-  const dadosFormatados = formatarDadosComparacao(dados)
+  const dadosT12 = dados.filter(
+    (item) => item.tipo_teste?.nome === 'T12 - FC2'
+  )
+
+  const dadosFormatados = formatarDadosComparacao(dadosT12)
+  const dadosPorData = formatarDadosPorData(dadosT12)
 
   console.log('Dados formatados:', dadosFormatados)
 
@@ -70,9 +54,17 @@ function App() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Resultados dos testes</h1>
+      <h1>Resultados dos testes T12 - FC2</h1>
 
-      {dados.map((item) => (
+    <GraficoComparacaoT12 dados={dadosFormatados} />
+
+    <h2 style={{ marginTop: 40 }}>Comparação por data</h2>
+
+     <GraficoComparacaoPorData dados={dadosPorData} />
+
+
+
+      {/* {dados.map((item) => (
         <div
           key={item.id_resultado_teste}
           style={{
@@ -88,7 +80,8 @@ function App() {
           <p><strong>Data:</strong> {item.data_resultado ?? '-'}</p>
           <p><strong>Observação:</strong> {item.observacao ?? '-'}</p>
         </div>
-      ))}
+      ))} */}
+      {/* Vou deixar comentado para não me confundir na hora da visualização dos testes*/}
     </div>
   )
 }
