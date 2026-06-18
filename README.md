@@ -15,7 +15,7 @@ Em etapas futuras, o projeto será expandido e convertido para um **aplicativo m
 * **React**
 * **TypeScript**
 * **Node.js**
-* **Banco de Dados Relacional** (privado) (Supabase)
+* **Supabase** (Banco de Dados Relacional privado)
 * **REST API**
 
 ---
@@ -40,7 +40,7 @@ Em etapas futuras, o projeto será expandido e convertido para um **aplicativo m
 ### Instalação Local
 
 ```bash
-git clone (https://github.com/HenriqueGodoyy/Natacao_Unaerp.git)
+git clone https://github.com/HenriqueGodoyy/Natacao_Unaerp.git
 cd unaerp-esportes
 npm install
 ```
@@ -66,5 +66,4 @@ npm run dev
 * [ ] Implementar autenticação de usuários
 * [ ] Desenvolver aplicativo mobile
 * [ ] Adicionar notificações e relatórios automáticos
-
 
