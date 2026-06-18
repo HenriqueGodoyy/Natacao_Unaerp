@@ -35,7 +35,7 @@ Em etapas futuras, o projeto será expandido e convertido para um **aplicativo m
 ## ⚙️ Execução do Projeto
 
 > **Aviso:** Este projeto utiliza variáveis de ambiente privadas para conexão com banco de dados e serviços internos.
-> Por esse motivo, o projeto **não pode ser executado integralmente sem acesso ao arquivo ****`.env`**** e às credenciais apropriadas**.
+> Por esse motivo, o projeto **não pode ser executado integralmente sem acesso ao arquivo `.env` e às credenciais apropriadas**.
 
 ### Instalação Local
 
@@ -68,5 +68,3 @@ npm run dev
 * [ ] Adicionar notificações e relatórios automáticos
 
 
-
-##
