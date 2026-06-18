@@ -41,7 +41,7 @@ Em etapas futuras, o projeto será expandido e convertido para um **aplicativo m
 
 ```bash
 git clone https://github.com/HenriqueGodoyy/Natacao_Unaerp.git
-cd unaerp-esportes
+cd Natacao_Unaerp
 npm install
 ```
 
@@ -66,4 +66,3 @@ npm run dev
 * [ ] Implementar autenticação de usuários
 * [ ] Desenvolver aplicativo mobile
 * [ ] Adicionar notificações e relatórios automáticos
-
