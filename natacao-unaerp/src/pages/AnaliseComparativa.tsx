@@ -7,6 +7,7 @@ import GraficoRadarT12 from '../components/charts/GraficoRadarT12'
 import { formatarDadosLimiar } from '../components/utils/formatarDadosLimiar'
 import GraficoLimiar from '../components/charts/GraficoLimiar'
 import { filtrarAtletas } from '../components/utils/filtrarAtletas'
+import { formatarData } from '../components/utils/formatarData'
 import AthleteFilter from '../components/charts/AthleteFilter'
 import ChartCard from '../components/ui/ChartCard'
 import EmptyState from '../components/ui/EmptyState'
@@ -88,7 +89,7 @@ const atletasLimiar = [
   const totalAtletas = atletas.length
   const totalTestes = dados.length
   const ultimoTesteData = dados.length > 0
-    ? dados[dados.length - 1].data_resultado ?? '—'
+    ? formatarData(dados[dados.length - 1].data_resultado)
     : '—'
 
   if (carregando) return <LoadingSpinner />
@@ -137,7 +138,7 @@ const atletasLimiar = [
             title="Resultados gerais do teste T12 — FC2"
             subtitle="Valores de frequência cardíaca 2 por atleta"
           >
-            <GraficoComparacaoT12 dados={dadosFormatadosFC2} />
+            <GraficoComparacaoT12 dados={dadosFormatadosFC2} todosAtletas={atletas} />
           </ChartCard>
         </>
       ) : (
@@ -157,14 +158,14 @@ const atletasLimiar = [
               title="Comparação T12 — FC1"
               subtitle="Evolução da FC1 por data entre atletas"
             >
-              <GraficoComparacaoPorData dados={dadosPorDataFC1} />
+              <GraficoComparacaoPorData dados={dadosPorDataFC1} todosAtletas={atletas} />
             </ChartCard>
 
             <ChartCard
               title="Comparação T12 — FC2"
               subtitle="Evolução da FC2 por data entre atletas"
             >
-              <GraficoComparacaoPorData dados={dadosPorDataFC2} />
+              <GraficoComparacaoPorData dados={dadosPorDataFC2} todosAtletas={atletas} />
             </ChartCard>
           </div>
 
@@ -172,7 +173,7 @@ const atletasLimiar = [
             title="Radar Chart — Perfil Comparativo"
             subtitle="Métricas comparadas: MTS / FC1 / FC2 (último teste)"
           >
-            <GraficoRadarT12 dados={radarData} atletas={atletas} />
+            <GraficoRadarT12 dados={radarData} atletas={atletasSelecionados} todosAtletas={atletas} />
           </ChartCard>
         </>
       ) : temAtletasSelecionados ? (
@@ -191,7 +192,7 @@ const atletasLimiar = [
           subtitle="Curva de limiar anaeróbico por percentual"
         >
           {atletasLimiar.length > 0 ? (
-            <GraficoLimiar dados={dadosGraficoLimiar} atletas={atletasLimiar} />
+            <GraficoLimiar dados={dadosGraficoLimiar} atletas={atletasLimiar} todosAtletas={atletas} />
           ) : (
             <EmptyState
               icon="📉"

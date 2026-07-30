@@ -79,24 +79,23 @@ export default function AthleteFilter({
 
       {/* Athlete list */}
       <div className="athlete-list">
-        {atletasFiltrados.map((atleta) => (
-          <div
-            key={atleta}
-            onClick={() =>
-              toggleAtleta(atleta)
-            }
-            className={`athlete-item ${
-              atletasSelecionados.includes(atleta)
-                ? 'selected'
-                : ''
-            }`}
-          >
-            <div className="athlete-avatar">
-              {getIniciais(atleta)}
-            </div>
-            {atleta}
-          </div>
-        ))}
+        {atletasFiltrados.map((atleta) => {
+          const selecionado = atletasSelecionados.includes(atleta)
+          return (
+            <button
+              key={atleta}
+              type="button"
+              onClick={() => toggleAtleta(atleta)}
+              aria-pressed={selecionado}
+              className={`athlete-item ${selecionado ? 'selected' : ''}`}
+            >
+              <div className="athlete-avatar">
+                {getIniciais(atleta)}
+              </div>
+              {atleta}
+            </button>
+          )
+        })}
       </div>
     </div>
   )
