@@ -11,6 +11,7 @@ import AthleteFilter from '../components/charts/AthleteFilter'
 import ChartCard from '../components/ui/ChartCard'
 import EmptyState from '../components/ui/EmptyState'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
+import ErrorState from '../components/ui/ErrorState'
 
 function AnaliseComparativa() {
   const { dados, dadosLimiar, carregando, erro } = useResultados()
@@ -91,13 +92,7 @@ const atletasLimiar = [
     : '—'
 
   if (carregando) return <LoadingSpinner />
-  if (erro) return (
-    <div className="error-container">
-      <div className="error-icon">⚠️</div>
-      <h3 className="error-title">Erro ao carregar dados</h3>
-      <p className="error-message">{erro}</p>
-    </div>
-  )
+  if (erro) return <ErrorState message={erro} />
 
   return (
     <div>
