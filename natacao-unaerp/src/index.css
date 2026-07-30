@@ -496,9 +496,14 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   padding: 10px 14px;
   cursor: pointer;
+  background: none;
+  border: none;
   border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-family: inherit;
   transition: all var(--transition-fast);
   color: var(--text-secondary);
   font-size: 0.9rem;

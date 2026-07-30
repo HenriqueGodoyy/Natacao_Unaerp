@@ -9,13 +9,14 @@ import {
   Legend,
 } from 'recharts'
 import type { DadoGraficoPorData } from '../types/graficos'
-import { getColor, tooltipStyle } from '../utils/chartColors'
+import { getAtletaColor, tooltipStyle } from '../utils/chartColors'
 
 type Props = {
   dados: DadoGraficoPorData[]
+  todosAtletas: string[]
 }
 
-function GraficoComparacaoPorData({ dados }: Props) {
+function GraficoComparacaoPorData({ dados, todosAtletas }: Props) {
   // Extrai dinamicamente os nomes dos atletas a partir dos dados
   const atletas = dados.length > 0
     ? Object.keys(dados[0]).filter((key) => key !== 'data')
@@ -42,11 +43,11 @@ function GraficoComparacaoPorData({ dados }: Props) {
           />
           <Tooltip {...tooltipStyle} />
           <Legend />
-          {atletas.map((atleta, index) => (
+          {atletas.map((atleta) => (
             <Bar
               key={atleta}
               dataKey={atleta}
-              fill={getColor(index)}
+              fill={getAtletaColor(atleta, todosAtletas)}
               radius={[6, 6, 0, 0]}
             />
           ))}

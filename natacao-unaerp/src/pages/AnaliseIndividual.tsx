@@ -4,6 +4,7 @@ import AthleteFilter from '../components/charts/AthleteFilter'
 import { formatarDadosLimiar } from '../components/utils/formatarDadosLimiar'
 import GraficoLimiar from '../components/charts/GraficoLimiar'
 import { filtrarAtletas } from '../components/utils/filtrarAtletas'
+import { formatarData } from '../components/utils/formatarData'
 import { agruparTesteCompleto, formatarRadarChart } from '../components/utils/formatarDados'
 import GraficoRadarT12 from '../components/charts/GraficoRadarT12'
 import ChartCard from '../components/ui/ChartCard'
@@ -103,7 +104,7 @@ function AnaliseIndividual() {
                     </option>
                     {datasDisponiveis.map((data) => (
                       <option key={data} value={data}>
-                        {data}
+                        {formatarData(data)}
                       </option>
                     ))}
                   </select>
@@ -113,12 +114,12 @@ function AnaliseIndividual() {
                 <ChartCard
                   title="Análise T12 Individual"
                   subtitle={dataSelecionada
-                    ? `Teste de ${dataSelecionada} — Perfil FC1 / FC2 / MTS`
+                    ? `Teste de ${formatarData(dataSelecionada)} — Perfil FC1 / FC2 / MTS`
                     : 'Selecione uma data acima para visualizar'
                   }
                 >
                   {dataSelecionada ? (
-                    <GraficoRadarT12 dados={radarData} atletas={atletasSelecionados} />
+                    <GraficoRadarT12 dados={radarData} atletas={atletasSelecionados} todosAtletas={atletas} />
                   ) : (
                     <EmptyState
                       icon="📅"
@@ -134,7 +135,7 @@ function AnaliseIndividual() {
                   subtitle="Curva de limiar anaeróbico do atleta"
                 >
                   {atletasLimiar.length > 0 ? (
-                    <GraficoLimiar dados={dadosGraficoLimiar} atletas={atletasLimiar} />
+                    <GraficoLimiar dados={dadosGraficoLimiar} atletas={atletasLimiar} todosAtletas={atletas} />
                   ) : (
                     <EmptyState
                       icon="📉"

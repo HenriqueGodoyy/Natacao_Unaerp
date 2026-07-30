@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
-import { getColor } from '../utils/chartColors'
+import { getAtletaColor } from '../utils/chartColors'
 import type { DadoRadar } from '../types/graficos'
 
 type TooltipRadarProps = {
@@ -56,9 +56,10 @@ function TooltipRadar({ active, payload, label }: TooltipRadarProps) {
 type Props = {
   dados: DadoRadar[]
   atletas: string[]
+  todosAtletas: string[]
 }
 
-function GraficoRadarT12({ dados, atletas }: Props) {
+function GraficoRadarT12({ dados, atletas, todosAtletas }: Props) {
   return (
     <div style={{ width: '100%', height: 450 }}>
       <ResponsiveContainer>
@@ -76,13 +77,13 @@ function GraficoRadarT12({ dados, atletas }: Props) {
           <Tooltip content={<TooltipRadar />} />
           <Legend />
 
-          {atletas.map((atleta, index) => (
+          {atletas.map((atleta) => (
             <Radar
               key={atleta}
               name={atleta}
               dataKey={atleta}
-              stroke={getColor(index)}
-              fill={getColor(index)}
+              stroke={getAtletaColor(atleta, todosAtletas)}
+              fill={getAtletaColor(atleta, todosAtletas)}
               fillOpacity={0.2}
               strokeWidth={2}
             />
