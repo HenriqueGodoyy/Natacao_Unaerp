@@ -1,4 +1,4 @@
-import type { ResultadoItem, DadoGraficoComparacao, DadoGraficoPorData, ResultadoTesteCompleto } from '../types/graficos'
+import type { ResultadoItem, DadoGraficoComparacao, DadoGraficoPorData, ResultadoTesteCompleto, DadoRadar } from '../types/graficos'
 
 export function formatarDadosComparacao( // Esse é a formatação de comparação geral entre T12- FC
   dados: ResultadoItem[]
@@ -69,7 +69,7 @@ export function agruparTesteCompleto( // Formatação para gráfico completo, on
 
 export function formatarRadarChart(
   dados: ResultadoTesteCompleto[]
-) {
+): DadoRadar[] {
   // Calcula os valores máximos dinamicamente a partir dos dados
   const maxFC1 = Math.max(...dados.map((d) => d.FC1 ?? 0), 1)
   const maxFC2 = Math.max(...dados.map((d) => d.FC2 ?? 0), 1)

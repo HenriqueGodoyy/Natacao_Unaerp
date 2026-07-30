@@ -9,8 +9,20 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { getColor } from '../utils/chartColors'
+import type { DadoRadar } from '../types/graficos'
 
-function TooltipRadar({ active, payload, label }: any) {
+type TooltipRadarProps = {
+  active?: boolean
+  label?: string
+  payload?: Array<{
+    dataKey: string
+    name: string
+    color: string
+    payload: Record<string, number | string>
+  }>
+}
+
+function TooltipRadar({ active, payload, label }: TooltipRadarProps) {
   if (!active || !payload?.length) return null
 
   return (
@@ -27,7 +39,7 @@ function TooltipRadar({ active, payload, label }: any) {
         {label}
       </p>
 
-      {payload.map((entry: any) => {
+      {payload.map((entry) => {
         const valorReal =
           entry.payload[`${entry.dataKey}_real`]
 
@@ -42,7 +54,7 @@ function TooltipRadar({ active, payload, label }: any) {
 }
 
 type Props = {
-  dados: any[]
+  dados: DadoRadar[]
   atletas: string[]
 }
 

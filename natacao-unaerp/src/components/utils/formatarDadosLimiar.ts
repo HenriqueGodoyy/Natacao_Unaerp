@@ -1,9 +1,9 @@
-import type { ResultadoLimiarItem } from '../types/graficos'
+import type { ResultadoLimiarItem, DadoGraficoLimiar } from '../types/graficos'
 
 export function formatarDadosLimiar(
   dados: ResultadoLimiarItem[]
-) {
-  const agrupado: Record<string, any> = {}
+): DadoGraficoLimiar[] {
+  const agrupado: Record<number, DadoGraficoLimiar> = {}
 
   dados.forEach((item) => {
     const percentual = item.percentual

@@ -9,9 +9,10 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { getColor, tooltipStyle } from '../utils/chartColors'
+import type { DadoGraficoLimiar } from '../types/graficos'
 
 type Props = {
-  dados: any[]
+  dados: DadoGraficoLimiar[]
   atletas: string[]
 }
 
