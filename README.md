@@ -41,9 +41,19 @@ Em etapas futuras, o projeto será expandido e convertido para um **aplicativo m
 
 ```bash
 git clone https://github.com/HenriqueGodoyy/Natacao_Unaerp.git
-cd Natacao_Unaerp
+cd Natacao_Unaerp/natacao-unaerp
 npm install
 ```
+
+### Configurar as variáveis de ambiente
+
+O projeto precisa das credenciais do Supabase. Copie o arquivo de exemplo e preencha os valores (encontrados em **Project Settings → API** no painel do Supabase):
+
+```bash
+cp .env.example .env
+```
+
+Depois edite o `.env` com sua `VITE_SUPABASE_URL` e `VITE_SUPABASE_KEY`.
 
 ### Executar em Ambiente de Desenvolvimento
 
