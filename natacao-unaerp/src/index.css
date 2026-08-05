@@ -6,12 +6,12 @@
 
 :root {
   /* ─── Cores Primárias ─── */
-  --bg-primary: #0a0e1a;
-  --bg-secondary: #111827;
-  --bg-card: #1a1f35;
-  --bg-card-hover: #1f2542;
-  --bg-input: #151a2e;
-  --bg-sidebar: #0d1120;
+  --bg-primary: #1c2440;
+  --bg-secondary: #243052;
+  --bg-card: #2e3860;
+  --bg-card-hover: #38446f;
+  --bg-input: #28325a;
+  --bg-sidebar: #202844;
 
   /* ─── Acentos ─── */
   --accent: #06b6d4;
