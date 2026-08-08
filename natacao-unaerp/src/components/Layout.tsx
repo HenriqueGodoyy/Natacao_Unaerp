@@ -56,6 +56,28 @@ export default function Layout() {
             <span className="nav-icon">👤</span>
             Análise Individual
           </NavLink>
+
+          <NavLink
+            to="/atletas"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
+            onClick={() => setMenuOpen(false)}
+          >
+            <span className="nav-icon">👥</span>
+            Gerenciar Atletas
+          </NavLink>
+
+          <NavLink
+            to="/lancar"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
+            onClick={() => setMenuOpen(false)}
+          >
+            <span className="nav-icon">📝</span>
+            Lançar Resultados
+          </NavLink>
         </nav>
 
         <div className="sidebar-footer">

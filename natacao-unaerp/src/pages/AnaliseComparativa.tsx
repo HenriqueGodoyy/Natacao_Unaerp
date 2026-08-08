@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
-import { formatarDadosComparacao, formatarDadosPorData, agruparTesteCompleto, formatarRadarChart } from '../components/utils/formatarDados'
+import { formatarDadosComparacao, formatarDadosPorData, agruparTesteCompleto, formatarRadarChart, ultimoTestePorAtleta } from '../components/utils/formatarDados'
 import GraficoComparacaoT12 from '../components/charts/comparacaoT12'
 import type { ResultadoItem, ResultadoLimiarItem } from '../components/types/graficos'
 import GraficoComparacaoPorData from '../components/charts/GraficoComparacaoPorData'
@@ -103,13 +103,10 @@ function AnaliseComparativa() {
     (item) => item.tipo_teste?.nome?.includes('T12')
   )
   const testesAgrupados = agruparTesteCompleto(dadosT12)
-  
-  // Usa a data mais recente dinamicamente em vez de hardcoded
-  const datasUnicas = [...new Set(testesAgrupados.map(item => item.data))].sort()
-  const ultimaData = datasUnicas[datasUnicas.length - 1]
-  const ultimoTeste = testesAgrupados.filter(
-    item => item.data === ultimaData
-  )
+
+  // Último teste de cada atleta (não uma única data global), para o radar
+  // comparar todos os selecionados mesmo com datas de teste diferentes.
+  const ultimoTeste = ultimoTestePorAtleta(testesAgrupados)
 
 
 
@@ -128,7 +125,14 @@ function AnaliseComparativa() {
 
 
 
- const radarData = formatarRadarChart(ultimoTeste) // para o radar charts 
+ // Referência de normalização: todos os testes T12 de todos os atletas,
+ // para o radar refletir a posição relativa à equipe (e não 100% sempre).
+ const referenciaT12 = agruparTesteCompleto(
+   dados.filter((item) => item.tipo_teste?.nome?.includes('T12'))
+ )
+ const radarData = formatarRadarChart(ultimoTeste, referenciaT12)
+ // Séries do radar = apenas os atletas presentes no último teste.
+ const atletasRadar = [...new Set(ultimoTeste.map((t) => t.atleta))]
 
 
 const dadosLimiarFiltrados = dadosLimiar.filter(
@@ -241,7 +245,7 @@ const atletasLimiar = [
             title="Radar Chart — Perfil Comparativo"
             subtitle="Métricas comparadas: MTS / FC1 / FC2 (último teste)"
           >
-            <GraficoRadarT12 dados={radarData} atletas={atletas} />
+            <GraficoRadarT12 dados={radarData} atletas={atletasRadar} />
           </ChartCard>
         </>
       ) : temAtletasSelecionados ? (

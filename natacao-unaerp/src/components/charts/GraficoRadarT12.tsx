@@ -10,7 +10,26 @@ import {
 } from 'recharts'
 import { getColor } from '../utils/chartColors'
 
-function TooltipRadar({ active, payload, label }: any) {
+type LinhaRadar = Record<string, string | number>
+
+type EntradaTooltip = {
+  dataKey: string
+  name: string
+  color: string
+  payload: LinhaRadar
+}
+
+type TooltipRadarProps = {
+  active?: boolean
+  label?: string
+  payload?: EntradaTooltip[]
+}
+
+function TooltipRadar({
+  active,
+  payload,
+  label,
+}: TooltipRadarProps) {
   if (!active || !payload?.length) return null
 
   return (
@@ -27,7 +46,7 @@ function TooltipRadar({ active, payload, label }: any) {
         {label}
       </p>
 
-      {payload.map((entry: any) => {
+      {payload.map((entry) => {
         const valorReal =
           entry.payload[`${entry.dataKey}_real`]
 
@@ -42,24 +61,26 @@ function TooltipRadar({ active, payload, label }: any) {
 }
 
 type Props = {
-  dados: any[]
+  dados: LinhaRadar[]
   atletas: string[]
 }
 
 function GraficoRadarT12({ dados, atletas }: Props) {
   return (
-    <div style={{ width: '100%', height: 450 }}>
+    <div style={{ width: '100%', height: 400 }}>
       <ResponsiveContainer>
-        <RadarChart data={dados}>
-          <PolarGrid
-            stroke="rgba(148,163,184,0.1)"
-          />
+        <RadarChart data={dados} outerRadius="72%">
+          <PolarGrid stroke="rgba(148,163,184,0.15)" />
           <PolarAngleAxis
             dataKey="metrica"
             tick={{ fill: '#94a3b8', fontSize: 13 }}
           />
+          {/* Eixo de raio com domínio fixo (valores são relativos à
+              equipe, então os números são ocultados para não confundir). */}
           <PolarRadiusAxis
-            tick={{ fill: '#64748b', fontSize: 11 }}
+            domain={[0, 100]}
+            tick={false}
+            axisLine={false}
           />
           <Tooltip content={<TooltipRadar />} />
           <Legend />
@@ -71,8 +92,9 @@ function GraficoRadarT12({ dados, atletas }: Props) {
               dataKey={atleta}
               stroke={getColor(index)}
               fill={getColor(index)}
-              fillOpacity={0.2}
+              fillOpacity={0.25}
               strokeWidth={2}
+              dot={{ r: 3, fillOpacity: 1 }}
             />
           ))}
         </RadarChart>

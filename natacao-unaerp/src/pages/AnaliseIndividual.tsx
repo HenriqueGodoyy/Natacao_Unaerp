@@ -99,7 +99,12 @@ function AnaliseIndividual() {
     const testeSelecionado = testesAgrupados.filter(
         item => item.data === dataSelecionada
     )
-    const radarData = formatarRadarChart(testeSelecionado)    
+    // Referência: todos os testes T12 de todos os atletas, para o radar
+    // mostrar a posição relativa à equipe em vez de sempre 100%.
+    const referenciaT12 = agruparTesteCompleto(
+        dados.filter((item) => item.tipo_teste?.nome?.includes('T12'))
+    )
+    const radarData = formatarRadarChart(testeSelecionado, referenciaT12)
 
     const datasDisponiveis = [
         ...new Set (

@@ -67,41 +67,85 @@ export function agruparTesteCompleto( // Formatação para gráfico completo, on
   return Object.values(agrupado)
 }
 
+type Faixa = { min: number; max: number }
+
+// Escala um valor para 0–100 dentro de uma faixa de referência, com uma
+// margem de 15% em cada lado para que o melhor não fique colado na borda
+// e o pior não colapse no centro.
+function escalarNaFaixa(
+  valor: number | undefined,
+  faixa: Faixa
+): number {
+  if (valor == null) return 0
+  // Sem variação na referência (ex.: um único valor conhecido):
+  // usa um ponto médio para não gerar um radar totalmente cheio.
+  if (faixa.max <= faixa.min) return 60
+
+  const amplitude = faixa.max - faixa.min
+  const lo = faixa.min - amplitude * 0.15
+  const hi = faixa.max + amplitude * 0.15
+  const pct = ((valor - lo) / (hi - lo)) * 100
+  return Math.max(0, Math.min(100, pct))
+}
+
+function calcularFaixa(
+  referencia: ResultadoTesteCompleto[],
+  seletor: (d: ResultadoTesteCompleto) => number | undefined
+): Faixa {
+  const valores = referencia
+    .map(seletor)
+    .filter((v): v is number => v != null)
+  if (valores.length === 0) return { min: 0, max: 1 }
+  return { min: Math.min(...valores), max: Math.max(...valores) }
+}
+
+// Formata os dados para o radar T12.
+//   `dados`      -> atleta(s)/teste(s) que serão desenhados no radar.
+//   `referencia` -> conjunto usado para calcular a faixa de normalização.
+//                   Passe TODOS os testes (todos os atletas) para que o
+//                   radar mostre a posição relativa à equipe. Se omitido,
+//                   usa os próprios `dados` (compatibilidade retroativa).
+// Retorna o teste mais recente de cada atleta (um por atleta), em vez de
+// depender de uma única data global — assim a comparação em radar mostra
+// todos os atletas selecionados, mesmo que tenham testado em datas diferentes.
+export function ultimoTestePorAtleta(
+  testes: ResultadoTesteCompleto[]
+): ResultadoTesteCompleto[] {
+  const porAtleta: Record<string, ResultadoTesteCompleto> = {}
+  testes.forEach((t) => {
+    const atual = porAtleta[t.atleta]
+    if (!atual || t.data.localeCompare(atual.data) > 0) {
+      porAtleta[t.atleta] = t
+    }
+  })
+  return Object.values(porAtleta)
+}
+
 export function formatarRadarChart(
-  dados: ResultadoTesteCompleto[]
+  dados: ResultadoTesteCompleto[],
+  referencia: ResultadoTesteCompleto[] = dados
 ) {
-  // Calcula os valores máximos dinamicamente a partir dos dados
-  const maxFC1 = Math.max(...dados.map((d) => d.FC1 ?? 0), 1)
-  const maxFC2 = Math.max(...dados.map((d) => d.FC2 ?? 0), 1)
-  const maxMTS = Math.max(...dados.map((d) => d.MTS ?? 0), 1)
+  const faixaFC1 = calcularFaixa(referencia, (d) => d.FC1)
+  const faixaFC2 = calcularFaixa(referencia, (d) => d.FC2)
+  const faixaMTS = calcularFaixa(referencia, (d) => d.MTS)
+
+  const linha = (
+    metrica: string,
+    seletor: (d: ResultadoTesteCompleto) => number | undefined,
+    faixa: Faixa
+  ) => ({
+    metrica,
+    ...Object.fromEntries(
+      dados.flatMap((item) => [
+        [item.atleta, escalarNaFaixa(seletor(item), faixa)],
+        [`${item.atleta}_real`, seletor(item) ?? 0],
+      ])
+    ),
+  })
 
   return [
-    {
-      metrica: 'FC1',
-      ...Object.fromEntries(
-        dados.flatMap((item) => [
-          [item.atleta, ((item.FC1 ?? 0) / maxFC1) * 100],
-          [`${item.atleta}_real`, item.FC1 ?? 0],
-        ])
-      ),
-    },
-    {
-      metrica: 'FC2',
-      ...Object.fromEntries(
-        dados.flatMap((item) => [
-          [item.atleta, ((item.FC2 ?? 0) / maxFC2) * 100],
-          [`${item.atleta}_real`, item.FC2 ?? 0],
-        ])
-      ),
-    },
-    {
-      metrica: 'MTS',
-      ...Object.fromEntries(
-        dados.flatMap((item) => [
-          [item.atleta, ((item.MTS ?? 0) / maxMTS) * 100],
-          [`${item.atleta}_real`, item.MTS ?? 0],
-        ])
-      ),
-    },
+    linha('FC1', (d) => d.FC1, faixaFC1),
+    linha('FC2', (d) => d.FC2, faixaFC2),
+    linha('MTS', (d) => d.MTS, faixaMTS),
   ]
 }
