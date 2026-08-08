@@ -1,6 +1,7 @@
-import { 
+import {
     BarChart,
     Bar,
+    Cell,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -9,11 +10,14 @@ import {
     LabelList,
 } from 'recharts'
 import type { DadoGraficoComparacao } from '../types/graficos'
-import { tooltipStyle } from '../utils/chartColors'
+import { getAtletaColor, tooltipStyle } from '../utils/chartColors'
 
-type Props = { dados: DadoGraficoComparacao[] }
+type Props = {
+    dados: DadoGraficoComparacao[]
+    todosAtletas: string[]
+}
 
-function GraficoComparacaoT12({ dados }: Props) {
+function GraficoComparacaoT12({ dados, todosAtletas }: Props) {
     return (
         <div style={{ width: '100%', height: 380 }}>
             <ResponsiveContainer>
@@ -39,9 +43,14 @@ function GraficoComparacaoT12({ dados }: Props) {
                     <Bar
                         dataKey="valor"
                         radius={[8, 8, 0, 0]}
-                        fill="#06b6d4"
                         activeBar={{ stroke: '#22d3ee', strokeWidth: 2 }}
                     >
+                        {dados.map((item, index) => (
+                            <Cell
+                                key={`${item.atleta}-${index}`}
+                                fill={getAtletaColor(item.atleta, todosAtletas)}
+                            />
+                        ))}
                         <LabelList
                             dataKey="valor"
                             position="top"

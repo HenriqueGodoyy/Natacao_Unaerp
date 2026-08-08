@@ -8,11 +8,13 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from 'recharts'
-import { getColor, tooltipStyle } from '../utils/chartColors'
+import { getAtletaColor, tooltipStyle } from '../utils/chartColors'
+import type { DadoGraficoLimiar } from '../types/graficos'
 
 type Props = {
-  dados: any[]
+  dados: DadoGraficoLimiar[]
   atletas: string[]
+  todosAtletas: string[]
 }
 
 function formatarTempo(ms: number) {
@@ -27,7 +29,7 @@ function formatarTempo(ms: number) {
     .padStart(2, '0')}`
 }
 
-function GraficoLimiar({ dados, atletas }: Props) {
+function GraficoLimiar({ dados, atletas, todosAtletas }: Props) {
   return (
     <div style={{ width: '100%', height: 450 }}>
       <ResponsiveContainer>
@@ -61,15 +63,15 @@ function GraficoLimiar({ dados, atletas }: Props) {
 
           <Legend />
 
-          {atletas.map((atleta, index) => (
+          {atletas.map((atleta) => (
             <Line
               key={atleta}
               type="monotone"
               dataKey={atleta}
-              stroke={getColor(index)}
+              stroke={getAtletaColor(atleta, todosAtletas)}
               strokeWidth={3}
-              dot={{ r: 5, fill: getColor(index), strokeWidth: 2, stroke: '#0a0e1a' }}
-              activeDot={{ r: 7, stroke: getColor(index), strokeWidth: 2 }}
+              dot={{ r: 5, fill: getAtletaColor(atleta, todosAtletas), strokeWidth: 2, stroke: '#0a0e1a' }}
+              activeDot={{ r: 7, stroke: getAtletaColor(atleta, todosAtletas), strokeWidth: 2 }}
             />
           ))}
         </LineChart>

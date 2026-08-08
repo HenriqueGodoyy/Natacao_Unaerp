@@ -37,3 +37,15 @@ export type ResultadoLimiarItem = {
     }
   }
 }
+
+// Uma linha do gráfico de limiar: o percentual + o tempo_ms de cada atleta
+export type DadoGraficoLimiar = {
+  percentual: number
+  [atleta: string]: number
+}
+
+// Uma linha do radar: a métrica (FC1/FC2/MTS) + valores normalizados e reais por atleta
+export type DadoRadar = {
+  metrica: string
+  [atleta: string]: number | string
+}

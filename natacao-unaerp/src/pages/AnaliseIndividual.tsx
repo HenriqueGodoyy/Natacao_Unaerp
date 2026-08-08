@@ -1,84 +1,23 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../supabase'
+import { useState } from 'react'
+import { useResultados } from '../hooks/useResultados'
 import AthleteFilter from '../components/charts/AthleteFilter'
-import type { ResultadoItem, ResultadoLimiarItem } from '../components/types/graficos'
 import { formatarDadosLimiar } from '../components/utils/formatarDadosLimiar'
 import GraficoLimiar from '../components/charts/GraficoLimiar'
 import { filtrarAtletas } from '../components/utils/filtrarAtletas'
+import { formatarData } from '../components/utils/formatarData'
 import { agruparTesteCompleto, formatarRadarChart } from '../components/utils/formatarDados'
 import GraficoRadarT12 from '../components/charts/GraficoRadarT12'
 import ChartCard from '../components/ui/ChartCard'
 import EmptyState from '../components/ui/EmptyState'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
+import ErrorState from '../components/ui/ErrorState'
 
 
 function AnaliseIndividual() {
 
-    const [dados, setDados ] = useState<ResultadoItem[]>([])
-    const [carregando, setCarregando ] = useState(true)
-    const [erro, setErro] = useState<string | null>(null)
-    const [dadosLimiar, setDadosLimiar] = useState<ResultadoLimiarItem[]>([])
+    const { dados, dadosLimiar, carregando, erro } = useResultados()
     const [atletasSelecionados, setAtletasSelecionados] = useState<string[]>([])
     const [dataSelecionada, setDataSelecionada] = useState('')
-
-    useEffect(() => {
-        async function buscarResultados() {
-            setCarregando(true)
-
-
-            // busca dos resultados do teste
-            const { data, error } = await supabase
-            .from('resultado_teste')
-            .select(`
-                id_resultado_teste,
-                valor,
-                data_resultado,
-                observacao,
-                atleta:atleta_id(nome),
-                tipo_teste:tipo_teste_id(nome)
-                `)
-                .order('data_resultado', {ascending: true}) 
-                    // tratar erros dos graficos normais
-                   if(error) {
-                            setErro(error.message)
-                        } else {
-                            setDados(
-                                (data as unknown as ResultadoItem[]) ?? []
-                            )
-                        }
-
-                // busca dos resultados dos limiares
-                const {
-                    data: limiarData,
-                    error: limiarError,
-                } = await supabase
-                    .from('resultado_limiar')
-                    .select(`
-                        percentual,
-                        tempo_ms,
-                        teste_limiar:teste_limiar_id (
-                        data_teste,
-                        atleta:atleta_id (
-                             nome
-                            )
-                          )
-                        `)
-                        .order('percentual', {ascending : true})
-                        // Tratar erros dos graficos de limiar
-                        if(limiarError) {
-                            setErro(limiarError.message)
-                        } else {
-                            setDadosLimiar(
-                                (limiarData as unknown as ResultadoLimiarItem[]) ?? []
-                            )
-                        }
-                        setCarregando(false)
-        }
-
-        buscarResultados()
-    }, [])
-
-
 
     const atletas = [
         ...new Set(
@@ -131,13 +70,7 @@ function AnaliseIndividual() {
     const temAtletaSelecionado = atletasSelecionados.length > 0
 
     if (carregando) return <LoadingSpinner />
-    if (erro) return (
-      <div className="error-container">
-        <div className="error-icon">⚠️</div>
-        <h3 className="error-title">Erro ao carregar dados</h3>
-        <p className="error-message">{erro}</p>
-      </div>
-    )
+    if (erro) return <ErrorState message={erro} />
 
     return (
         <div>
@@ -176,7 +109,7 @@ function AnaliseIndividual() {
                     </option>
                     {datasDisponiveis.map((data) => (
                       <option key={data} value={data}>
-                        {data}
+                        {formatarData(data)}
                       </option>
                     ))}
                   </select>
@@ -186,12 +119,12 @@ function AnaliseIndividual() {
                 <ChartCard
                   title="Análise T12 Individual"
                   subtitle={dataSelecionada
-                    ? `Teste de ${dataSelecionada} — Perfil FC1 / FC2 / MTS`
+                    ? `Teste de ${formatarData(dataSelecionada)} — Perfil FC1 / FC2 / MTS`
                     : 'Selecione uma data acima para visualizar'
                   }
                 >
                   {dataSelecionada ? (
-                    <GraficoRadarT12 dados={radarData} atletas={atletasSelecionados} />
+                    <GraficoRadarT12 dados={radarData} atletas={atletasSelecionados} todosAtletas={atletas} />
                   ) : (
                     <EmptyState
                       icon="📅"
@@ -207,7 +140,7 @@ function AnaliseIndividual() {
                   subtitle="Curva de limiar anaeróbico do atleta"
                 >
                   {atletasLimiar.length > 0 ? (
-                    <GraficoLimiar dados={dadosGraficoLimiar} atletas={atletasLimiar} />
+                    <GraficoLimiar dados={dadosGraficoLimiar} atletas={atletasLimiar} todosAtletas={atletas} />
                   ) : (
                     <EmptyState
                       icon="📉"

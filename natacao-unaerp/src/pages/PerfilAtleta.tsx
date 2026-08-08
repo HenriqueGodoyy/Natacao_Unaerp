@@ -326,6 +326,7 @@ function PerfilAtleta() {
             <GraficoRadarT12
               dados={radarData}
               atletas={[atleta.nome]}
+              todosAtletas={[atleta.nome]}
             />
           ) : (
             <EmptyState
@@ -344,6 +345,7 @@ function PerfilAtleta() {
             <GraficoLimiar
               dados={dadosLimiar}
               atletas={[atleta.nome]}
+              todosAtletas={[atleta.nome]}
             />
           ) : (
             <EmptyState

@@ -1,4 +1,4 @@
-import type { ResultadoItem, DadoGraficoComparacao, DadoGraficoPorData, ResultadoTesteCompleto } from '../types/graficos'
+import type { ResultadoItem, DadoGraficoComparacao, DadoGraficoPorData, ResultadoTesteCompleto, DadoRadar } from '../types/graficos'
 
 export function formatarDadosComparacao( // Esse é a formatação de comparação geral entre T12- FC
   dados: ResultadoItem[]
@@ -124,7 +124,7 @@ export function ultimoTestePorAtleta(
 export function formatarRadarChart(
   dados: ResultadoTesteCompleto[],
   referencia: ResultadoTesteCompleto[] = dados
-) {
+): DadoRadar[] {
   const faixaFC1 = calcularFaixa(referencia, (d) => d.FC1)
   const faixaFC2 = calcularFaixa(referencia, (d) => d.FC2)
   const faixaMTS = calcularFaixa(referencia, (d) => d.MTS)
